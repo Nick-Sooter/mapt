@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const app = express();
 const pinRoute = require('./routes/pins')
+const userRoute = require('./routes/users')
 
 
 // parses incoming JSON requests, puts parsed data in req.body
@@ -19,6 +20,7 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use('/api/pins', pinRoute);
+app.use('/api/users', userRoute);
 
 app.listen(4000, () => {
   console.log('Nodemon is ready for battle');

@@ -20,10 +20,6 @@ const UserSchema = new mongoose.Schema({
     required: true,
     min: 6,
   },
-  timestamps: {
-    createdAt: 'created_at',
-    updatedAt: 'updated_at'
-  }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);
