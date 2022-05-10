@@ -12,8 +12,10 @@ import { format } from 'timeago.js';
 // const MAPBOX_TOKEN = ''; // Set your mapbox token here
 
 function App() {
+  const currentUser = 'RockyMtnHigh';
   const [pins, setPins] = React.useState([]);
   const [currentLocationId, setCurrentLocationId] = React.useState(null);
+  const [newLocation, setNewLocation] = React.useState(null);
   const [viewState, setViewState] = React.useState({
     longitude: -105.6836,
     latitude: 40.3428,
@@ -36,12 +38,22 @@ function App() {
     setCurrentLocationId(id);
   }
 
+  const handleAddPin = (event) => {
+    // console.log(event)
+    const [long, lat] = event.lngLat;
+    setNewLocation({
+      lat,
+      long,
+    });
+  };
+
   return (
     <Map
       {...viewState}
       onMove={evt => setViewState(evt.viewState)}
       style={{ width: '100vw', height: '100vh' }}
       mapStyle="mapbox://styles/mapbox/streets-v9"
+      onDblClick={handleAddPin}
       mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
     >
       {pins.map(pin => (
@@ -52,14 +64,14 @@ function App() {
             latitude={pin.lat}
           >
             <AddLocationIcon
-              style={{ fontSize: viewState.zoom * 4, color: 'blue' }}
+              style={{ fontSize: viewState.zoom * 4, color: pin.username === currentUser ? 'red' : 'blue', cursor: 'pointer' }}
               onClick={() => handleIconClick(pin._id)}
             />
           </Marker>
           {pin._id === currentLocationId && (
             <Popup
-              longitude={pin.long}
               latitude={pin.lat}
+              longitude={pin.long}
               closeButton={true}
               closeOnClick={false}
               anchor="left"
@@ -84,9 +96,21 @@ function App() {
               </div>
             </Popup>
           )}
-
         </>
       ))}
+      {newLocation && (
+        <Popup
+          latitude={newLocation.lat}
+          longitude={newLocation.long}
+          closeButton={true}
+          closeOnClick={false}
+          anchor="left"
+          onClose={() => setNewLocation(null)}
+        >
+          Hello World
+        </Popup>
+      )}
+
     </Map>
   );
 }
